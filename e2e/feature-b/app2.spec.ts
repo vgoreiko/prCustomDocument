@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import {AnnotationType} from './custom-annotation-types.enum';
+import {AnnotationType} from '../custom-annotation-types.enum';
 
 const description = `Here will be the description of the test suite. With support of Markdown syntax.`
 
