@@ -2,6 +2,10 @@ import { Injectable } from '@angular/core';
 import { PermissionService } from './permission.service';
 import { ToolsEntitlement } from '../store/app.state';
 import { Observable, map } from 'rxjs';
+import { 
+  MRNCCD_TOOLS_ACCESS_RIGHTS, 
+  PRODUCT_SUPPORT_ACCESS_RIGHTS 
+} from './menu-access-rights.const';
 
 export interface AmTreeMenuItem {
   disabled?: boolean;
@@ -72,16 +76,13 @@ export class MenuService {
       {
         id: 'mrnccd-tools',
         label: 'MRNCCD TOOLS',
-        show: this.isPermissionAllowed([
-          ToolsEntitlement.MRNCCD_TOOL_ANALYTICS, 
-          ToolsEntitlement.MRNCCD_TOOLS_DASHBOARD
-        ]),
+        show: this.isPermissionAllowed(MRNCCD_TOOLS_ACCESS_RIGHTS.SECTION),
         type: 'group',
         items: [
           {
             id: 'dashboard',
             label: 'Dashboard',
-            show: this.hasPermission(ToolsEntitlement.MRNCCD_TOOLS_DASHBOARD),
+            show: this.isPermissionAllowed(MRNCCD_TOOLS_ACCESS_RIGHTS.DASHBOARD),
             route: '/mrnccd-tools/dashboard',
             icon: '📊',
             items: []
@@ -89,7 +90,7 @@ export class MenuService {
           {
             id: 'analytics',
             label: 'Analytics',
-            show: this.hasPermission(ToolsEntitlement.MRNCCD_TOOL_ANALYTICS),
+            show: this.isPermissionAllowed(MRNCCD_TOOLS_ACCESS_RIGHTS.ANALYTICS),
             route: '/mrnccd-tools/analytics',
             icon: '📈',
             items: []
@@ -99,16 +100,13 @@ export class MenuService {
       {
         id: 'product-support',
         label: 'PRODUCT SUPPORT',
-        show: this.isPermissionAllowed([
-          ToolsEntitlement.PRODUCT_SUPPORT_TICKETS, 
-          ToolsEntitlement.PRODUCT_SUPPORT_KNOWLEDGE_BASE
-        ]),
+        show: this.isPermissionAllowed(PRODUCT_SUPPORT_ACCESS_RIGHTS.SECTION),
         type: 'group',
         items: [
           {
             id: 'tickets',
             label: 'Support Tickets',
-            show: this.hasPermission(ToolsEntitlement.PRODUCT_SUPPORT_TICKETS),
+            show: this.isPermissionAllowed(PRODUCT_SUPPORT_ACCESS_RIGHTS.TICKETS),
             route: '/product-support/tickets',
             icon: '🎫',
             items: []
@@ -116,7 +114,7 @@ export class MenuService {
           {
             id: 'knowledge-base',
             label: 'Knowledge Base',
-            show: this.hasPermission(ToolsEntitlement.PRODUCT_SUPPORT_KNOWLEDGE_BASE),
+            show: this.isPermissionAllowed(PRODUCT_SUPPORT_ACCESS_RIGHTS.KNOWLEDGE_BASE),
             route: '/product-support/knowledge-base',
             icon: '📚',
             items: []
