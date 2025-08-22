@@ -14,28 +14,31 @@
   <div class="main-layout">
     <aside class="main-sidebar">
       <nav class="sidebar-nav">
-        <div class="nav-section">
-          <h3 class="nav-section-title">MRNCCD TOOLS</h3>
-          <a routerLink="/mrnccd-tools/dashboard" routerLinkActive="active" class="nav-link child-link">
-            <span class="nav-icon">📊</span>
-            Dashboard
-          </a>
-          <a routerLink="/mrnccd-tools/analytics" routerLinkActive="active" class="nav-link child-link">
-            <span class="nav-icon">📈</span>
-            Analytics
+        <!-- Dynamic menu sections based on permissions -->
+        <div class="nav-section" *ngFor="let section of getVisibleMenuItems()">
+          <h3 class="nav-section-title">{{ section.label }}</h3>
+          
+          <!-- Menu items within each section -->
+          <a 
+            *ngFor="let item of section.items" 
+            [routerLink]="item.route" 
+            routerLinkActive="active" 
+            class="nav-link child-link"
+            [class.disabled]="item.disabled"
+            [style.display]="item.show ? 'flex' : 'none'"
+          >
+            <span class="nav-icon" *ngIf="item.icon">{{ item.icon }}</span>
+            {{ item.label }}
           </a>
         </div>
         
-        <div class="nav-section">
-          <h3 class="nav-section-title">PRODUCT SUPPORT</h3>
-          <a routerLink="/product-support/tickets" routerLinkActive="active" class="nav-link child-link">
-            <span class="nav-icon">🎫</span>
-            Support Tickets
-          </a>
-          <a routerLink="/product-support/knowledge-base" routerLinkActive="active" class="nav-link child-link">
-            <span class="nav-icon">📚</span>
-            Knowledge Base
-          </a>
+        <!-- Show message if no sections are accessible -->
+        <div class="nav-section" *ngIf="!hasAccessibleSections()">
+          <div class="no-access-message">
+            <span class="nav-icon">🚫</span>
+            <p>No features accessible</p>
+            <small>Contact your administrator for access</small>
+          </div>
         </div>
       </nav>
     </aside>

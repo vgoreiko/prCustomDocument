@@ -141,3 +141,9 @@ export const hasAnyPermission = (permissions: Array<keyof TUserState>): Observab
   const hasAny = permissions.some(permission => permissionService.hasPermission(permission));
   return of(hasAny);
 };
+
+
+
+
+
+

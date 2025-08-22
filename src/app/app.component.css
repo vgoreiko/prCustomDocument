@@ -118,9 +118,42 @@
   border-left-color: #2980b9;
 }
 
+.nav-link.disabled {
+  color: #adb5bd;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.nav-link.disabled:hover {
+  background-color: transparent;
+  border-left-color: transparent;
+}
+
 .child-link {
   padding-left: 2.5rem;
   font-size: 0.95rem;
+}
+
+.no-access-message {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: #6c757d;
+}
+
+.no-access-message .nav-icon {
+  font-size: 2rem;
+  margin: 0 0 1rem 0;
+  display: block;
+}
+
+.no-access-message p {
+  margin: 0.5rem 0;
+  font-weight: 500;
+}
+
+.no-access-message small {
+  color: #adb5bd;
+  font-size: 0.875rem;
 }
 
 .app-main {

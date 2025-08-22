@@ -14,9 +14,9 @@ export interface UserPermissions {
 })
 export class PermissionService {
   private permissionsSubject = new BehaviorSubject<UserPermissions>({
-    mrnccdToolAnalitycs: false,  // No access to analytics by default
-    mrnccdToolsDashboard: false, // No access to dashboard by default
-    productSupportTickets: true, // Keep access to product support
+    mrnccdToolAnalitycs: true,   // Enable access to analytics
+    mrnccdToolsDashboard: true,  // Enable access to dashboard
+    productSupportTickets: true,  // Keep access to product support
     productSupportKnowledgeBase: true // Keep access to knowledge base
   });
 
@@ -59,12 +59,24 @@ export class PermissionService {
   }
 
   /**
+   * Toggle a specific permission (for testing purposes)
+   */
+  togglePermission(permission: keyof UserPermissions): void {
+    const currentPermissions = this.getPermissions();
+    const updatedPermissions = {
+      ...currentPermissions,
+      [permission]: !currentPermissions[permission]
+    };
+    this.permissionsSubject.next(updatedPermissions);
+  }
+
+  /**
    * Reset permissions to defaults
    */
   resetPermissions(): void {
     this.permissionsSubject.next({
-      mrnccdToolAnalitycs: false,
-      mrnccdToolsDashboard: false,
+      mrnccdToolAnalitycs: true,
+      mrnccdToolsDashboard: true,
       productSupportTickets: true,
       productSupportKnowledgeBase: true
     });
