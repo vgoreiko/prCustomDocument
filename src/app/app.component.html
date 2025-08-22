@@ -2,18 +2,46 @@
   <header class="app-header">
     <div class="header-content">
       <h1 class="app-title">{{ title }}</h1>
-      <nav class="main-nav">
-        <a routerLink="/mrnccd-tools" routerLinkActive="active" class="nav-link">
-          MRNCCD Tools
-        </a>
-        <a routerLink="/product-support" routerLinkActive="active" class="nav-link">
-          Product Support
+      <nav class="header-nav">
+        <a routerLink="/mrnccd-tools/permission-demo" routerLinkActive="active" class="header-nav-link">
+          <span class="nav-icon">🔐</span>
+          Permission Demo
         </a>
       </nav>
     </div>
   </header>
   
-  <main class="app-main">
-    <router-outlet />
-  </main>
+  <div class="main-layout">
+    <aside class="main-sidebar">
+      <nav class="sidebar-nav">
+        <div class="nav-section">
+          <h3 class="nav-section-title">MRNCCD TOOLS</h3>
+          <a routerLink="/mrnccd-tools/dashboard" routerLinkActive="active" class="nav-link child-link">
+            <span class="nav-icon">📊</span>
+            Dashboard
+          </a>
+          <a routerLink="/mrnccd-tools/analytics" routerLinkActive="active" class="nav-link child-link">
+            <span class="nav-icon">📈</span>
+            Analytics
+          </a>
+        </div>
+        
+        <div class="nav-section">
+          <h3 class="nav-section-title">PRODUCT SUPPORT</h3>
+          <a routerLink="/product-support/tickets" routerLinkActive="active" class="nav-link child-link">
+            <span class="nav-icon">🎫</span>
+            Support Tickets
+          </a>
+          <a routerLink="/product-support/knowledge-base" routerLinkActive="active" class="nav-link child-link">
+            <span class="nav-icon">📚</span>
+            Knowledge Base
+          </a>
+        </div>
+      </nav>
+    </aside>
+    
+    <main class="app-main">
+      <router-outlet />
+    </main>
+  </div>
 </div>

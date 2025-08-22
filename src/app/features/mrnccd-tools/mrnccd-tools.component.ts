@@ -1,20 +1,16 @@
 import { Component } from '@angular/core';
-import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-mrnccd-tools',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [RouterOutlet],
   template: `
     <div class="mrnccd-tools-container">
       <header class="feature-header">
         <h1>MRNCCD Tools</h1>
-        <nav class="feature-nav">
-          <a routerLink="dashboard" routerLinkActive="active" class="nav-link">Dashboard</a>
-          <a routerLink="analytics" routerLinkActive="active" class="nav-link">Analytics</a>
-          <a routerLink="permission-demo" routerLinkActive="active" class="nav-link">Permission Demo</a>
-        </nav>
       </header>
+      
       <main class="feature-content">
         <router-outlet />
       </main>
@@ -22,53 +18,35 @@ import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
   `,
   styles: [`
     .mrnccd-tools-container {
-      padding: 2rem;
-      max-width: 1200px;
-      margin: 0 auto;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
     }
     
     .feature-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 2rem;
-      padding-bottom: 1rem;
-      border-bottom: 2px solid #e0e0e0;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 1.5rem 2rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
     
     .feature-header h1 {
-      color: #2c3e50;
       margin: 0;
-      font-size: 2.5rem;
+      font-size: 2rem;
       font-weight: 600;
     }
     
-    .feature-nav {
-      display: flex;
-      gap: 1rem;
-    }
-    
-    .nav-link {
-      padding: 0.75rem 1.5rem;
-      text-decoration: none;
-      color: #7f8c8d;
-      border-radius: 8px;
-      transition: all 0.3s ease;
-      font-weight: 500;
-    }
-    
-    .nav-link:hover {
-      background-color: #f8f9fa;
-      color: #2c3e50;
-    }
-    
-    .nav-link.active {
-      background-color: #3498db;
-      color: white;
-    }
-    
     .feature-content {
-      min-height: 400px;
+      flex: 1;
+      padding: 2rem;
+      overflow-y: auto;
+      background: #ffffff;
+    }
+    
+    @media (max-width: 768px) {
+      .feature-content {
+        padding: 1rem;
+      }
     }
   `]
 })
