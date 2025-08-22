@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { ToolsEntitlement } from '../../store/app.state';
 import { dynamicRedirectGuard } from '../../guards/dynamic-redirect.guard';
+import { authGuard } from '../../guards/auth.guard';
 
 export const MRNCCD_TOOLS_ROUTES: Routes = [
   {
@@ -11,11 +12,13 @@ export const MRNCCD_TOOLS_ROUTES: Routes = [
   {
     path: 'dashboard',
     loadComponent: () => import('./pages/dashboard/dashboard.component').then(m => m.DashboardComponent),
+    canActivate: [authGuard],
     data: { permission: [ToolsEntitlement.MRNCCD_TOOLS_DASHBOARD] }
   },
   {
     path: 'analytics',
     loadComponent: () => import('./pages/analytics/analytics.component').then(m => m.AnalyticsComponent),
+    canActivate: [authGuard],
     data: { permission: [ToolsEntitlement.MRNCCD_TOOL_ANALYTICS] }
   },
   {

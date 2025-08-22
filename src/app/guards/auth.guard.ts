@@ -2,16 +2,7 @@ import { inject } from '@angular/core';
 import { Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { TUserState, ToolsEntitlement } from '../store/app.state';
-
-// Mock user state for demonstration - replace with actual NgRx store when available
-const mockUserState: TUserState = {
-  firstName: 'John',
-  lastName: 'Doe',
-  mrnccdToolAnalitycs: true,
-  mrnccdToolsDashboard: true,
-  productSupportTickets: true,
-  productSupportKnowledgeBase: true
-};
+import { PermissionService } from '../services/permission.service';
 
 // Permission-based auth guard
 export const authGuard = (
@@ -19,6 +10,7 @@ export const authGuard = (
   state: RouterStateSnapshot
 ): Observable<boolean> => {
   const router = inject(Router);
+  const permissionService = inject(PermissionService);
   
   // Check if route has permission requirements
   const requiredPermissions = route.data['permission'] as Array<keyof TUserState>;
@@ -28,9 +20,9 @@ export const authGuard = (
     return of(true);
   }
   
-  // Check if user has all required permissions
+  // Check if user has all required permissions using the permission service
   const hasAllPermissions = requiredPermissions.every(permission => 
-    mockUserState[permission] === true
+    permissionService.hasPermission(permission)
   );
   
   if (!hasAllPermissions) {
@@ -45,45 +37,52 @@ export const authGuard = (
 // Factory function to create auth guard functions
 export const createAuthGuard = () => {
   const router = inject(Router);
+  const permissionService = inject(PermissionService);
 
   // Method to check if user can access a specific route
   const canAccessRoute = (routeName: keyof TUserState): Observable<boolean> => {
-    const permission = mockUserState[routeName];
-    return of(typeof permission === 'boolean' ? permission : false);
+    const permission = permissionService.hasPermission(routeName);
+    return of(permission);
   };
 
   // Method to get current user state
   const getCurrentUser = (): Observable<TUserState | null> => {
-    return of(mockUserState);
+    // Create a mock user with permissions from the service
+    const mockUser: TUserState = {
+      firstName: 'John',
+      lastName: 'Doe',
+      mrnccdToolAnalitycs: permissionService.hasPermission('mrnccdToolAnalitycs'),
+      mrnccdToolsDashboard: permissionService.hasPermission('mrnccdToolsDashboard'),
+      productSupportTickets: permissionService.hasPermission('productSupportTickets'),
+      productSupportKnowledgeBase: permissionService.hasPermission('productSupportKnowledgeBase')
+    };
+    return of(mockUser);
   };
 
   // Method to check if user is authenticated (has firstName and lastName)
   const isAuthenticated = (): Observable<boolean> => {
-    return of(!!(mockUserState.firstName && mockUserState.lastName));
+    return of(true); // Mock user is always authenticated
   };
 
   // Method to get user's full name
   const getUserFullName = (): Observable<string> => {
-    if (mockUserState.firstName && mockUserState.lastName) {
-      return of(`${mockUserState.firstName} ${mockUserState.lastName}`);
-    }
-    return of('Unknown User');
+    return of('John Doe');
   };
 
   // Method to check specific permissions
   const hasPermission = (permission: keyof TUserState): Observable<boolean> => {
-    return canAccessRoute(permission);
+    return of(permissionService.hasPermission(permission));
   };
 
   // Method to check multiple permissions (all must be true)
   const hasAllPermissions = (permissions: Array<keyof TUserState>): Observable<boolean> => {
-    const hasAll = permissions.every(permission => mockUserState[permission] || false);
+    const hasAll = permissionService.hasPermissions(permissions);
     return of(hasAll);
   };
 
   // Method to check multiple permissions (at least one must be true)
   const hasAnyPermission = (permissions: Array<keyof TUserState>): Observable<boolean> => {
-    const hasAny = permissions.some(permission => mockUserState[permission] || false);
+    const hasAny = permissions.some(permission => permissionService.hasPermission(permission));
     return of(hasAny);
   };
 
@@ -100,35 +99,45 @@ export const createAuthGuard = () => {
 
 // Individual functional functions for direct use
 export const canAccessRoute = (routeName: keyof TUserState): Observable<boolean> => {
-  const permission = mockUserState[routeName];
-  return of(typeof permission === 'boolean' ? permission : false);
+  const permissionService = inject(PermissionService);
+  const permission = permissionService.hasPermission(routeName);
+  return of(permission);
 };
 
 export const getCurrentUser = (): Observable<TUserState | null> => {
-  return of(mockUserState);
+  const permissionService = inject(PermissionService);
+  const mockUser: TUserState = {
+    firstName: 'John',
+    lastName: 'Doe',
+    mrnccdToolAnalitycs: permissionService.hasPermission('mrnccdToolAnalitycs'),
+    mrnccdToolsDashboard: permissionService.hasPermission('mrnccdToolsDashboard'),
+    productSupportTickets: permissionService.hasPermission('productSupportTickets'),
+    productSupportKnowledgeBase: permissionService.hasPermission('productSupportKnowledgeBase')
+  };
+  return of(mockUser);
 };
 
 export const isAuthenticated = (): Observable<boolean> => {
-  return of(!!(mockUserState.firstName && mockUserState.lastName));
+  return of(true);
 };
 
 export const getUserFullName = (): Observable<string> => {
-  if (mockUserState.firstName && mockUserState.lastName) {
-    return of(`${mockUserState.firstName} ${mockUserState.lastName}`);
-  }
-  return of('Unknown User');
+  return of('John Doe');
 };
 
 export const hasPermission = (permission: keyof TUserState): Observable<boolean> => {
-  return canAccessRoute(permission);
+  const permissionService = inject(PermissionService);
+  return of(permissionService.hasPermission(permission));
 };
 
 export const hasAllPermissions = (permissions: Array<keyof TUserState>): Observable<boolean> => {
-  const hasAll = permissions.every(permission => mockUserState[permission] || false);
+  const permissionService = inject(PermissionService);
+  const hasAll = permissionService.hasPermissions(permissions);
   return of(hasAll);
 };
 
 export const hasAnyPermission = (permissions: Array<keyof TUserState>): Observable<boolean> => {
-  const hasAny = permissions.some(permission => mockUserState[permission] || false);
+  const permissionService = inject(PermissionService);
+  const hasAny = permissions.some(permission => permissionService.hasPermission(permission));
   return of(hasAny);
 };

@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './guards/auth.guard';
-import { parentPermissionGuard } from './guards/parent-permission.guard';
 import { dynamicRedirectGuard } from './guards/dynamic-redirect.guard';
 
 export const routes: Routes = [
@@ -12,7 +11,7 @@ export const routes: Routes = [
   {
     path: 'mrnccd-tools',
     loadComponent: () => import('./features/mrnccd-tools/mrnccd-tools.component').then(m => m.MrnccdToolsComponent),
-    canActivate: [parentPermissionGuard, authGuard, dynamicRedirectGuard],
+    canActivate: [authGuard, dynamicRedirectGuard],
     children: [
       {
         path: '',
@@ -23,7 +22,7 @@ export const routes: Routes = [
   {
     path: 'product-support',
     loadComponent: () => import('./features/product-support/product-support.component').then(m => m.ProductSupportComponent),
-    canActivate: [parentPermissionGuard, authGuard, dynamicRedirectGuard],
+    canActivate: [authGuard, dynamicRedirectGuard],
     children: [
       {
         path: '',

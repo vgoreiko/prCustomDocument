@@ -14,10 +14,10 @@ export interface UserPermissions {
 })
 export class PermissionService {
   private permissionsSubject = new BehaviorSubject<UserPermissions>({
-    mrnccdToolAnalitycs: true,  // Default to true for demo purposes
-    mrnccdToolsDashboard: true, // Default to true for demo purposes
-    productSupportTickets: true, // Default to true for demo purposes
-    productSupportKnowledgeBase: true // Default to true for demo purposes
+    mrnccdToolAnalitycs: false,  // No access to analytics by default
+    mrnccdToolsDashboard: false, // No access to dashboard by default
+    productSupportTickets: true, // Keep access to product support
+    productSupportKnowledgeBase: true // Keep access to knowledge base
   });
 
   public permissions$ = this.permissionsSubject.asObservable();
@@ -63,8 +63,8 @@ export class PermissionService {
    */
   resetPermissions(): void {
     this.permissionsSubject.next({
-      mrnccdToolAnalitycs: true,
-      mrnccdToolsDashboard: true,
+      mrnccdToolAnalitycs: false,
+      mrnccdToolsDashboard: false,
       productSupportTickets: true,
       productSupportKnowledgeBase: true
     });
