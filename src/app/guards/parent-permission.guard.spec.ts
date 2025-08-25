@@ -1,22 +1,13 @@
 import { TestBed } from '@angular/core/testing';
-import { Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { of } from 'rxjs';
+import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { parentPermissionGuard } from './parent-permission.guard';
 
 describe('parentPermissionGuard', () => {
-  let mockRouter: jasmine.SpyObj<Router>;
   let mockRoute: Partial<ActivatedRouteSnapshot>;
   let mockState: RouterStateSnapshot;
 
   beforeEach(() => {
-    mockRouter = jasmine.createSpyObj('Router', ['navigate']);
-    
-    TestBed.configureTestingModule({
-      providers: [
-        { provide: Router, useValue: mockRouter }
-      ]
-    });
-
+    TestBed.configureTestingModule({});
     mockState = {} as RouterStateSnapshot;
   });
 
