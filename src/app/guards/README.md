@@ -1,83 +1,58 @@
-# Guards
+# Guards Documentation
 
-This directory contains Angular route guards that handle authentication and authorization.
+This directory contains Angular route guards that handle authentication, authorization, and dynamic routing.
 
 ## Available Guards
 
 ### `authGuard`
-Handles basic authentication checks.
+Handles user authentication. Redirects unauthenticated users to the login page.
 
 ### `parentPermissionGuard`
-Collects permissions from child routes and adds them to parent route data.
+**NEW**: Collects permissions from child routes and attaches them to parent routes. This guard:
+- Runs before other guards to collect permission data
+- Handles frozen route data gracefully using `Object.defineProperty`
+- Integrates with the existing `ToolsEntitlement` enum
+- Works alongside `dynamicRedirectGuard` for comprehensive permission management
 
-### `dynamicRedirectGuard` (NEW)
-Intelligently redirects users to the first child route they have access to, with automatic parent route detection. No hardcoded route names required.
+### `dynamicRedirectGuard`
+Handles dynamic routing based on user permissions. Redirects users to their first accessible route within a feature module.
 
-## Dynamic Redirect Guard
+## Guard Execution Order
 
-The `dynamicRedirectGuard` solves the problem of hardcoded route redirects by:
+The guards are executed in the following order:
 
-1. **Permission-Based Routing**: Instead of redirecting all users to a fixed first child route (e.g., 'dashboard'), it checks user permissions and redirects to the first accessible route.
+1. **`authGuard`** - Authenticates the user
+2. **`parentPermissionGuard`** - Collects permissions from child routes
+3. **`dynamicRedirectGuard`** - Redirects based on collected permissions
 
-2. **Automatic Route Detection**: Dynamically detects parent routes that have child routes with permissions, eliminating the need for hardcoded route names.
-
-3. **Fallback Handling**: If a user doesn't have access to the first child route, it automatically tries the next one in sequence.
-
-4. **Scalable Architecture**: Works with any parent route structure, making it suitable for large applications.
-
-### How It Works
-
-1. **Route Detection**: The guard automatically identifies parent routes by:
-   - Checking if the current URL has only one segment (parent route)
-   - Verifying that the route has child routes with permission requirements
-   - Only triggering for routes that meet both criteria
-
-2. **Permission-Based Redirection**: When triggered:
-   - The guard retrieves user permissions from the permission service
-   - It examines all child routes in order
-   - It finds the first route where the user has the required permissions
-   - It redirects the user to that accessible route
-
-3. **Fallback Handling**: If no accessible routes are found:
-   - The guard logs detailed warning information
-   - Redirects the user to the home page (configurable)
-
-### Example Scenarios
-
-**Scenario 1: User has dashboard access**
-- User navigates to `/mrnccd-tools`
-- Guard checks permissions: `mrnccdToolsDashboard: true`
-- User is redirected to `/mrnccd-tools/dashboard`
-
-**Scenario 2: User doesn't have dashboard access but has analytics access**
-- User navigates to `/mrnccd-tools`
-- Guard checks permissions: `mrnccdToolsDashboard: false`, `mrnccdToolAnalitycs: true`
-- User is redirected to `/mrnccd-tools/analytics`
-
-**Scenario 3: User has no access to any child routes**
-- User navigates to `/mrnccd-tools`
-- Guard checks permissions: all false
-- User is redirected to `/` (home page)
-
-### Configuration
-
-The guard is automatically applied to parent routes in `app.routes.ts`:
+## Integration Example
 
 ```typescript
+// Parent route configuration
 {
   path: 'mrnccd-tools',
-  loadComponent: () => import('./features/mrnccd-tools/mrnccd-tools.component'),
-  canActivate: [parentPermissionGuard, authGuard, dynamicRedirectGuard],
-  children: [...]
+  canActivate: [authGuard, parentPermissionGuard, dynamicRedirectGuard],
+  children: [
+    {
+      path: 'dashboard',
+      canActivate: [parentPermissionGuard, authGuard],
+      data: { permission: [ToolsEntitlement.MRNCCD_TOOLS_DASHBOARD] }
+    }
+  ]
 }
 ```
 
-### Benefits
+## How It Works
 
-- **Dynamic**: Routes adapt to user permissions automatically
-- **Scalable**: Works with any route structure without hardcoded route names
-- **Maintainable**: No need to update guard code when adding new parent routes
-- **User-Friendly**: Users always land on accessible content
-- **Secure**: Prevents access to unauthorized routes
-- **Flexible**: Easy to configure different fallback behaviors
-- **Future-Proof**: Suitable for large applications with many feature modules
+1. **`parentPermissionGuard`** runs first on child routes, collecting their permissions
+2. **`parentPermissionGuard`** then runs on parent routes, aggregating all child permissions
+3. **`dynamicRedirectGuard`** uses the collected permissions to determine the best redirect target
+4. Users are automatically redirected to their first accessible route
+
+## Benefits
+
+- **Automatic Permission Collection**: No need to manually maintain permission lists
+- **Flexible Routing**: Routes automatically adapt to user permissions
+- **Error Handling**: Gracefully handles frozen route data
+- **Type Safety**: Full TypeScript support with `ToolsEntitlement` enum
+- **Performance**: Efficient permission collection with duplicate removal

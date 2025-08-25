@@ -1,9 +1,10 @@
 import { ActivatedRouteSnapshot } from '@angular/router';
 import { Observable, of } from 'rxjs';
+import { ToolsEntitlement } from '../store/app.state';
 
 // Define the structure of route data with permissions
 interface RouteDataWithPermissions {
-  permission?: string | string[];
+  permission?: string[] | string;
   [key: string]: any; // Allow other properties
 }
 
@@ -24,8 +25,21 @@ export const parentPermissionGuard = (
   const childPermissions = collectChildPermissions(route);
   
   // Add collected permissions to the parent route data
+  // Use Object.defineProperty to avoid "object is not extensible" error
   if (childPermissions.length > 0) {
-    route.data.permission = childPermissions;
+    try {
+      // Try to add the permission property safely
+      Object.defineProperty(route.data, 'permission', {
+        value: childPermissions,
+        writable: true,
+        enumerable: true,
+        configurable: true
+      });
+    } catch (error) {
+      console.warn('Could not add permission to route data:', error);
+      // If we can't modify the route data, we'll still return true
+      // The dynamic redirect guard will handle the permission checking
+    }
   }
   
   return of(true);

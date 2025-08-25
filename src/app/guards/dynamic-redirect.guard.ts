@@ -84,7 +84,10 @@ function findFirstAccessibleRouteForParent(parentUrl: string, userPermissions: a
   console.log('🔍 findFirstAccessibleRouteForParent - Parent URL:', parentUrl);
   console.log('🔍 findFirstAccessibleRouteForParent - User permissions:', userPermissions);
   
-  if (parentUrl === '/mrnccd-tools') {
+  // Extract the base route name from the URL
+  const baseRoute = parentUrl.split('/')[1]; // Remove leading slash and get first segment
+  
+  if (baseRoute === 'mrnccd-tools') {
     console.log('🔍 Checking MRNCCD tools routes...');
     // Check MRNCCD tools routes in order of preference
     if (userPermissions.mrnccdToolsDashboard) {
@@ -100,7 +103,7 @@ function findFirstAccessibleRouteForParent(parentUrl: string, userPermissions: a
     return '/mrnccd-tools/permission-demo';
   }
   
-  if (parentUrl === '/product-support') {
+  if (baseRoute === 'product-support') {
     console.log('🔍 Checking Product Support routes...');
     // Check Product Support routes in order of preference
     if (userPermissions.productSupportTickets) {
@@ -116,6 +119,6 @@ function findFirstAccessibleRouteForParent(parentUrl: string, userPermissions: a
     return null;
   }
   
-  console.log('🔍 Unknown parent route:', parentUrl);
+  console.log('🔍 Unknown parent route:', baseRoute);
   return null;
 }
