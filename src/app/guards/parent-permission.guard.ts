@@ -1,5 +1,4 @@
-import { inject } from '@angular/core';
-import { Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot } from '@angular/router';
 import { Observable, of } from 'rxjs';
 
 // Define the structure of route data with permissions
@@ -14,8 +13,7 @@ interface TypedActivatedRouteSnapshot extends ActivatedRouteSnapshot {
 }
 
 export const parentPermissionGuard = (
-  route: TypedActivatedRouteSnapshot,
-  state: RouterStateSnapshot
+  route: TypedActivatedRouteSnapshot
 ): Observable<boolean> => {
   // If this route already has permissions, don't modify it
   if (route.data.permission) {

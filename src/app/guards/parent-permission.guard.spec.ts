@@ -1,14 +1,12 @@
 import { TestBed } from '@angular/core/testing';
-import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot } from '@angular/router';
 import { parentPermissionGuard } from './parent-permission.guard';
 
 describe('parentPermissionGuard', () => {
   let mockRoute: Partial<ActivatedRouteSnapshot>;
-  let mockState: RouterStateSnapshot;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    mockState = {} as RouterStateSnapshot;
   });
 
   it('should return true when route has no children', () => {
@@ -17,7 +15,7 @@ describe('parentPermissionGuard', () => {
       children: []
     } as Partial<ActivatedRouteSnapshot>;
 
-    const result = parentPermissionGuard(mockRoute as ActivatedRouteSnapshot, mockState);
+    const result = parentPermissionGuard(mockRoute as ActivatedRouteSnapshot);
     
     expect(result).toBeDefined();
     result.subscribe(value => {
@@ -31,7 +29,7 @@ describe('parentPermissionGuard', () => {
       children: []
     } as Partial<ActivatedRouteSnapshot>;
 
-    const result = parentPermissionGuard(mockRoute as ActivatedRouteSnapshot, mockState);
+    const result = parentPermissionGuard(mockRoute as ActivatedRouteSnapshot);
     
     result.subscribe(value => {
       expect(value).toBe(true);
@@ -55,7 +53,7 @@ describe('parentPermissionGuard', () => {
       children: [childRoute1 as ActivatedRouteSnapshot, childRoute2 as ActivatedRouteSnapshot]
     } as Partial<ActivatedRouteSnapshot>;
 
-    const result = parentPermissionGuard(mockRoute as ActivatedRouteSnapshot, mockState);
+    const result = parentPermissionGuard(mockRoute as ActivatedRouteSnapshot);
     
     result.subscribe(value => {
       expect(value).toBe(true);
@@ -79,7 +77,7 @@ describe('parentPermissionGuard', () => {
       children: [childRoute as ActivatedRouteSnapshot]
     } as Partial<ActivatedRouteSnapshot>;
 
-    const result = parentPermissionGuard(mockRoute as ActivatedRouteSnapshot, mockState);
+    const result = parentPermissionGuard(mockRoute as ActivatedRouteSnapshot);
     
     result.subscribe(value => {
       expect(value).toBe(true);
@@ -103,7 +101,7 @@ describe('parentPermissionGuard', () => {
       children: [childRoute1 as ActivatedRouteSnapshot, childRoute2 as ActivatedRouteSnapshot]
     } as Partial<ActivatedRouteSnapshot>;
 
-    const result = parentPermissionGuard(mockRoute as ActivatedRouteSnapshot, mockState);
+    const result = parentPermissionGuard(mockRoute as ActivatedRouteSnapshot);
     
     result.subscribe(value => {
       expect(value).toBe(true);
@@ -127,7 +125,7 @@ describe('parentPermissionGuard', () => {
       children: [childRoute1 as ActivatedRouteSnapshot, childRoute2 as ActivatedRouteSnapshot]
     } as Partial<ActivatedRouteSnapshot>;
 
-    const result = parentPermissionGuard(mockRoute as ActivatedRouteSnapshot, mockState);
+    const result = parentPermissionGuard(mockRoute as ActivatedRouteSnapshot);
     
     result.subscribe(value => {
       expect(value).toBe(true);
@@ -151,7 +149,7 @@ describe('parentPermissionGuard', () => {
       children: [childRoute1 as ActivatedRouteSnapshot, childRoute2 as ActivatedRouteSnapshot]
     } as Partial<ActivatedRouteSnapshot>;
 
-    const result = parentPermissionGuard(mockRoute as ActivatedRouteSnapshot, mockState);
+    const result = parentPermissionGuard(mockRoute as ActivatedRouteSnapshot);
     
     result.subscribe(value => {
       expect(value).toBe(true);
