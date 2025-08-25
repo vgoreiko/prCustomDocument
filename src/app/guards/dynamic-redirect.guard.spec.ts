@@ -5,21 +5,28 @@ import { dynamicRedirectGuard } from './dynamic-redirect.guard';
 import { PermissionService, UserPermissions } from '../services/permission.service';
 
 describe('DynamicRedirectGuard', () => {
-  let mockRouter: jasmine.SpyObj<Router>;
-  let mockPermissionService: jasmine.SpyObj<PermissionService>;
+  let mockRouter: { navigate: any };
+  let mockPermissionService: { permissions$: any };
   let mockRoute: ActivatedRouteSnapshot;
   let mockState: RouterStateSnapshot;
 
   beforeEach(() => {
-    mockRouter = jasmine.createSpyObj('Router', ['navigate']);
-    mockPermissionService = jasmine.createSpyObj('PermissionService', [], {
+    // Create Jest-compatible mock functions
+    const mockNavigate = jest.fn();
+    mockNavigate.mockReturnValue(undefined);
+    
+    mockRouter = {
+      navigate: mockNavigate
+    };
+    
+    mockPermissionService = {
       permissions$: of({
         mrnccdToolAnalitycs: false,
         mrnccdToolsDashboard: false,
         productSupportTickets: false,
         productSupportKnowledgeBase: false
       })
-    });
+    };
     
     mockRoute = {
       children: [{
@@ -62,7 +69,7 @@ describe('DynamicRedirectGuard', () => {
     
     result.subscribe(shouldActivate => {
       expect(shouldActivate).toBe(false);
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/mrnccd-tools', 'dashboard']);
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['/mrnccd-tools/dashboard']);
     });
   });
 
@@ -80,7 +87,7 @@ describe('DynamicRedirectGuard', () => {
     
     result.subscribe(shouldActivate => {
       expect(shouldActivate).toBe(false);
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/mrnccd-tools', 'analytics']);
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['/mrnccd-tools/analytics']);
     });
   });
 
