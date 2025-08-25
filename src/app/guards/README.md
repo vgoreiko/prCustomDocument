@@ -28,14 +28,14 @@ The guards are executed in the following order:
 ## Integration Example
 
 ```typescript
-// Parent route configuration
+// Parent route configuration - parentPermissionGuard runs here
 {
   path: 'mrnccd-tools',
   canActivate: [authGuard, parentPermissionGuard, dynamicRedirectGuard],
   children: [
     {
       path: 'dashboard',
-      canActivate: [parentPermissionGuard, authGuard],
+      canActivate: [authGuard], // Only authGuard needed on child routes
       data: { permission: [ToolsEntitlement.MRNCCD_TOOLS_DASHBOARD] }
     }
   ]
@@ -44,15 +44,18 @@ The guards are executed in the following order:
 
 ## How It Works
 
-1. **`parentPermissionGuard`** runs first on child routes, collecting their permissions
-2. **`parentPermissionGuard`** then runs on parent routes, aggregating all child permissions
-3. **`dynamicRedirectGuard`** uses the collected permissions to determine the best redirect target
-4. Users are automatically redirected to their first accessible route
+1. **`parentPermissionGuard`** runs **only on parent routes**
+2. **Automatically discovers all child routes** and collects their permissions
+3. **No need to add guards to child routes** - permissions are collected automatically
+4. **`dynamicRedirectGuard`** uses the collected permissions to determine the best redirect target
+5. Users are automatically redirected to their first accessible route
 
 ## Benefits
 
 - **Automatic Permission Collection**: No need to manually maintain permission lists
+- **No Redundant Guard Calls**: Guard runs only once per parent route
 - **Flexible Routing**: Routes automatically adapt to user permissions
 - **Error Handling**: Gracefully handles frozen route data
 - **Type Safety**: Full TypeScript support with `ToolsEntitlement` enum
 - **Performance**: Efficient permission collection with duplicate removal
+- **Maintainable**: Add new routes without touching guard configuration

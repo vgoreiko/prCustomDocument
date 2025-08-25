@@ -3,18 +3,18 @@ import { Observable, of } from 'rxjs';
 import { ToolsEntitlement } from '../store/app.state';
 
 // Define the structure of route data with permissions
-interface RouteDataWithPermissions {
+interface IRouteDataWithPermissions {
   permission?: string[] | string;
   [key: string]: any; // Allow other properties
 }
 
 // Extend ActivatedRouteSnapshot to include our typed data
-interface TypedActivatedRouteSnapshot extends ActivatedRouteSnapshot {
-  data: RouteDataWithPermissions;
+interface ITypedActivatedRouteSnapshot extends ActivatedRouteSnapshot {
+  data: IRouteDataWithPermissions;
 }
 
 export const parentPermissionGuard = (
-  route: TypedActivatedRouteSnapshot
+  route: ITypedActivatedRouteSnapshot
 ): Observable<boolean> => {
   // If this route already has permissions, don't modify it
   if (route.data.permission) {
@@ -48,7 +48,7 @@ export const parentPermissionGuard = (
 /**
  * Recursively collects all permissions from child routes
  */
-function collectChildPermissions(route: TypedActivatedRouteSnapshot): string[] {
+function collectChildPermissions(route: ITypedActivatedRouteSnapshot): string[] {
   const permissions: string[] = [];
   
   // Check if current route has permissions
@@ -64,7 +64,7 @@ function collectChildPermissions(route: TypedActivatedRouteSnapshot): string[] {
   // Recursively check child routes
   if (route.children) {
     route.children.forEach(child => {
-      const childPerms = collectChildPermissions(child as TypedActivatedRouteSnapshot);
+      const childPerms = collectChildPermissions(child as ITypedActivatedRouteSnapshot);
       permissions.push(...childPerms);
     });
   }
